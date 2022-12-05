@@ -4,8 +4,8 @@ Don't go broke in the Bear market.
 
 ## Contributors:
 
-```[Siddharth Uppal](https://github.com/Sidduppal)```
-Uniswap and oracle connections
+[Siddharth Uppal](https://github.com/Sidduppal)
+```Uniswap and oracle connections```
 
 [Michelle Shelby](Ivoryspren)
 Dynamic Performance NFT
