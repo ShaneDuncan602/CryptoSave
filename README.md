@@ -8,24 +8,29 @@ Don't go broke in the Bear market.
 
 ```Uniswap and oracle connections```
 
+
 [Michelle Shelby](Ivoryspren)
 
-Dynamic Performance NFT
+```Dynamic Performance NFT```
+
 
 [Daniel Iniguez](danieliniguezv)
 
-Dynamic Performance NFT
+```Dynamic Performance NFT```
+
 
 [Shane Duncan](ShaneDuncan602)
 
-CryptoSave contract
+```CryptoSave contract```
+
 
 [Robert W](gnimmel)
 
-Graphics
+```Graphics```
 
 CryptoSave contract
 
+
 [Oscar](Struka9)
 
-Scheduled Poker
+```Scheduled Poker```
