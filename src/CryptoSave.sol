@@ -33,6 +33,21 @@ contract CryptoSave is Ownable {
     }
 
     /**
+     * @dev add to the contract's ether amount
+     */
+    receive() external payable {
+        // React to receiving ether
+    }
+
+    /**
+     * @dev add to the contract's stable coin amount
+     */
+    function addStableCoin(uint256 _stableAmount) external {
+        // React to receiving stable coin
+        stableAmount += _stableAmount;
+    }
+
+    /**
      * @dev transfer all the tokens from the address of this contract
      * to address of the owner
      */
