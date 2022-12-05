@@ -4,33 +4,38 @@ Don't go broke in the Bear market.
 
 ## Contributors:
 
-[Siddharth Uppal](https://github.com/Sidduppal)
-
 ```Uniswap and oracle connections```
 
+[Siddharth Uppal](https://github.com/Sidduppal)
+
+
+```Dynamic Performance NFT```
 
 [Michelle Shelby](Ivoryspren)
 
-```Dynamic Performance NFT```
 
+```Dynamic Performance NFT```
 
 [Daniel Iniguez](danieliniguezv)
 
-```Dynamic Performance NFT```
-
-
-[Shane Duncan](ShaneDuncan602)
 
 ```CryptoSave contract```
 
+[Shane Duncan](ShaneDuncan602)
+
+
+```Graphics
+
+CryptoSave contract
+```
 
 [Robert W](gnimmel)
 
-```Graphics```
 
-CryptoSave contract
 
+
+```Scheduled Poker```
 
 [Oscar](Struka9)
 
-```Scheduled Poker```
+
