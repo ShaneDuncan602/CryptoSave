@@ -1,5 +1,8 @@
+<<<<<<< HEAD
 worker/target/
 
+=======
+>>>>>>> 24a7215 (added gitignore)
 # Binaries for programs and plugins
 *.exe
 *.exe~
