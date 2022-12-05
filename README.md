@@ -2,11 +2,16 @@
 Don't go broke in the Bear market.
 
 
-Contributors:
+## Contributors:
 
-Siddharth Uppal 
-Michelle Shelby
-Daniel Iniguez
-Shane Duncan
-Robert W
-Oscar
+-Siddharth Uppal
+
+-Michelle Shelby
+
+-Daniel Iniguez
+
+-Shane Duncan
+
+-Robert W
+
+-Oscar
