@@ -24,10 +24,9 @@ Don't go broke in the Bear market.
 [Shane Duncan](ShaneDuncan602)
 
 
-```Graphics
+```Graphics```
+```CryptoSave contract```
 
-CryptoSave contract
-```
 
 [Robert W](gnimmel)
 
