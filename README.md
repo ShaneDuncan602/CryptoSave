@@ -6,11 +6,11 @@ Don't go broke in the Bear market.
 
 [Siddharth Uppal](https://github.com/Sidduppal)
 
--Michelle Shelby
+[Michelle Shelby](Ivoryspren)
 
 -Daniel Iniguez
 
--Shane Duncan
+[Shane Duncan](ShaneDuncan602)
 
 -Robert W
 
