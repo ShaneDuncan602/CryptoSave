@@ -4,7 +4,7 @@ Don't go broke in the Bear market.
 
 ## Contributors:
 
--Siddharth Uppal
+[Siddharth Uppal](https://github.com/Sidduppal)
 
 -Michelle Shelby
 
