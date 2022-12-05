@@ -4,7 +4,7 @@ Don't go broke in the Bear market.
 
 ## Contributors:
 
-[Siddharth Uppal](https://github.com/Sidduppal)
+'''[Siddharth Uppal](https://github.com/Sidduppal)'''
 Uniswap and oracle connections
 
 [Michelle Shelby](Ivoryspren)
