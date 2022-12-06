@@ -10,25 +10,47 @@ contract CryptoSave is Ownable {
     uint256 public lastCryptoPrice;
     uint256 cryptoAmount;
     uint256 stableAmount;
-
-    ///This function is called from the external timer and is the entry point
-    function poke() external returns (bool success) {
-        //check oracle for spot price
+    enum ActionType {
+        GO_STABLE,
+        GO_CRYPTO
     }
 
-    /// Trade contract assets to stable coin
-    function tradeToStable() internal {}
+    constructor() {
+        mintNFT();
+    }
 
-    /// Trade contract assets to crypto coin
-    function tradeToCrypto() internal {}
+    /**
+     * @dev This function is called from the external timer and is the entry point
+     */
+    function poke(ActionType action) external returns (bool success) {
+        if (action == ActionType.GO_CRYPTO) {
+            return tradeToStable();
+        } else {
+            return tradeToCrypto();
+        }
+    }
 
-    // Setter for the percent in rise that will trigger the trade from stable to crypto
-    function setPercentRise(uint8 _percentRise) public {
+    /**
+     * @dev Trade contract assets to stable coin
+     */
+    function tradeToStable() private returns (bool success) {}
+
+    /**
+     * @dev Trade contract assets to crypto coin
+     */
+    function tradeToCrypto() private returns (bool success) {}
+
+    /**
+     * @dev Setter for the percent in rise that will trigger the trade from stable to crypto
+     */
+    function setPercentRise(uint8 _percentRise) public onlyOwner {
         percentRise = _percentRise;
     }
 
-    // Setter for the percent in fall that will trigger the trade from crypto to stable
-    function setPercentFall(uint8 _percentFall) public {
+    /**
+     * @dev Setter for the percent in fall that will trigger the trade from crypto to stable
+     */
+    function setPercentFall(uint8 _percentFall) public onlyOwner {
         percentFall = _percentFall;
     }
 
@@ -48,6 +70,16 @@ contract CryptoSave is Ownable {
     }
 
     /**
+     * @dev Mint the progress NFT
+     */
+    function mintNFT() public onlyOwner {}
+
+    /**
+     * @dev Update the progress NFT
+     */
+    function updateNFT() public onlyOwner {}
+
+    /**
      * @dev transfer all the tokens from the address of this contract
      * to address of the owner
      */
@@ -62,7 +94,7 @@ contract CryptoSave is Ownable {
      * @dev transfer the token from the address of this contract
      * to address of the owner
      */
-    function withdrawToken(address _tokenContract, uint256 _amount) internal {
+    function withdrawToken(address _tokenContract, uint256 _amount) private {
         IERC20 tokenContract = IERC20(_tokenContract);
 
         // needs to execute `approve()` on the token contract to allow itself the transfer
