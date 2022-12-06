@@ -1,9 +1,12 @@
+use serde::Deserialize;
 use std::{env, str::FromStr};
 
 use web3::{
     contract::{Contract, Options},
     types::{Address, H160},
 };
+
+use reqwest::{Client, Url};
 
 #[tokio::main]
 async fn main() {
@@ -14,6 +17,27 @@ async fn main() {
             poke().await;
         });
     }
+}
+
+async fn get_spot_eth_price() -> Result<SpotPriceResponse, Error> {
+    let url = Url::parse_with_params(
+        "https://api.coingecko.com/api/v3/simple/price",
+        &[("ids", "ethereum"), ("vs_currencies", "usd")],
+    )
+    .map_err(|e| Error::ServerSideError(format!("couldn't parse spot price url")))?;
+
+    let response = Client::builder()
+        .build()
+        .map_err(|e| Error::ServerSideError(format!("couldn't build http client")))?
+        .get(url)
+        .send()
+        .await
+        .map_err(|e| Error::ServerSideError(format!("couldn't get spot price response")))?
+        .json::<SpotPriceResponse>()
+        .await
+        .map_err(|e| Error::ServerSideError(format!("couldn't deserialize json")))?;
+
+    Ok(response)
 }
 
 async fn poke() -> Result<(), Error> {
@@ -43,6 +67,17 @@ async fn poke() -> Result<(), Error> {
     Ok(())
 }
 
+#[derive(Debug)]
 enum Error {
     ServerSideError(String),
+}
+
+#[derive(Deserialize)]
+struct SpotPriceResponse {
+    ethereum: PriceData,
+}
+
+#[derive(Deserialize)]
+struct PriceData {
+    usd: f64,
 }
