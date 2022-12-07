@@ -3,17 +3,21 @@ pragma solidity 0.8.17;
 import "openzeppelin-contracts/access/Ownable.sol";
 import "openzeppelin-contracts/token/ERC20/IERC20.sol";
 
+import "./swap/UniswapV3Condensed.sol";
+
 contract CryptoSave is Ownable {
-    uint8 public percentRise = 10;
-    uint8 public percentFall = 10;
-    uint256 public lastStablePrice;
-    uint256 public lastCryptoPrice;
+    uint256 public lastStablePurchasePrice; // last purchase price
+    uint256 public lastCryptoPurchasePrice; // last purchase price
     uint256 cryptoAmount;
     uint256 stableAmount;
-    enum ActionType {
-        GO_STABLE,
-        GO_CRYPTO
-    }
+
+    UniswapV3SwapExamples uni = new UniswapV3SwapExamples();
+    address constant WETH = 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2;
+    address constant DAI = 0x6B175474E89094C44Da98b954EedeAC495271d0F;
+    IWETH private weth = IWETH(WETH);
+    IERC20 private dai = IERC20(DAI);
+
+    event Transfer(string fromCurrency, string toCurrency, uint256 amount);
 
     constructor() {
         mintNFT();
@@ -22,8 +26,8 @@ contract CryptoSave is Ownable {
     /**
      * @dev This function is called from the external timer and is the entry point
      */
-    function poke(ActionType action) external returns (bool success) {
-        if (action == ActionType.GO_CRYPTO) {
+    function poke(uint8 action) external returns (bool success) {
+        if (action == 0) {
             return tradeToStable();
         } else {
             return tradeToCrypto();
@@ -33,40 +37,55 @@ contract CryptoSave is Ownable {
     /**
      * @dev Trade contract assets to stable coin
      */
-    function tradeToStable() private returns (bool success) {}
+    function tradeToStable() private returns (bool success) {
+        weth.approve(address(uni), cryptoAmount);
+        uint256 holdAmount = cryptoAmount;
+        stableAmount = uni.swapExactInputSingleHop(
+            WETH,
+            DAI,
+            3000,
+            cryptoAmount
+        );
+        cryptoAmount = 0;
+        emit Transfer("WETH", "DAI", holdAmount);
+        return (stableAmount != 0);
+    }
 
     /**
      * @dev Trade contract assets to crypto coin
      */
-    function tradeToCrypto() private returns (bool success) {}
-
-    /**
-     * @dev Setter for the percent in rise that will trigger the trade from stable to crypto
-     */
-    function setPercentRise(uint8 _percentRise) public onlyOwner {
-        percentRise = _percentRise;
+    function tradeToCrypto() private returns (bool success) {
+        dai.approve(address(uni), stableAmount);
+        uint256 holdAmount = stableAmount;
+        cryptoAmount += uni.swapExactInputSingleHop(
+            DAI,
+            WETH,
+            3000,
+            stableAmount
+        );
+        stableAmount = 0;
+        emit Transfer("DAI", "WETH", holdAmount);
+        return (cryptoAmount != 0);
     }
 
     /**
-     * @dev Setter for the percent in fall that will trigger the trade from crypto to stable
+     * @dev Wrap the eth for easy trading
      */
-    function setPercentFall(uint8 _percentFall) public onlyOwner {
-        percentFall = _percentFall;
+    function convertToWeth() private {
+        IWETH(weth).deposit{value: address(this).balance}();
     }
 
     /**
      * @dev add to the contract's ether amount
      */
     receive() external payable {
-        // React to receiving ether
+        cryptoAmount += address(this).balance;
+        convertToWeth();
     }
 
-    /**
-     * @dev add to the contract's stable coin amount
-     */
-    function addStableCoin(uint256 _stableAmount) external {
-        // React to receiving stable coin
-        stableAmount += _stableAmount;
+    function fundContract() external payable {
+        cryptoAmount += address(this).balance;
+        convertToWeth();
     }
 
     /**
@@ -101,5 +120,13 @@ contract CryptoSave is Ownable {
         tokenContract.approve(address(this), _amount);
 
         tokenContract.transferFrom(address(this), owner(), _amount);
+    }
+
+    function getStableAmount() public view returns(uint256){
+        return stableAmount;
+    }
+
+    function getCryptoAmount() public view returns(uint256){
+        return cryptoAmount;
     }
 }
