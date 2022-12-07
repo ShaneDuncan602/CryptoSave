@@ -28,6 +28,7 @@ contract UniswapV3SwapExamples {
             });
 
         amountOut = router.exactInputSingle(params);
+        
     }
 
     function swapExactInputMultiHop(

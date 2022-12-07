@@ -2,14 +2,20 @@
 pragma solidity 0.8.17;
 import "openzeppelin-contracts/access/Ownable.sol";
 import "openzeppelin-contracts/token/ERC20/IERC20.sol";
-
 import "./swap/UniswapV3Condensed.sol";
 
+/**
+ * @title Insurance for ETH hodlers
+ * @author @ShaneDuncan602
+ * @notice This is only the POC in its most basic form
+ * @dev Don't judge me...this was a rush job
+ */
 contract CryptoSave is Ownable {
     uint256 public lastStablePurchasePrice; // last purchase price
     uint256 public lastCryptoPurchasePrice; // last purchase price
     uint256 cryptoAmount;
     uint256 stableAmount;
+    uint256 public totalGasUsed;
 
     UniswapV3SwapExamples uni = new UniswapV3SwapExamples();
     address constant WETH = 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2;
@@ -26,7 +32,9 @@ contract CryptoSave is Ownable {
     /**
      * @dev This function is called from the external timer and is the entry point
      */
-    function poke(uint8 action) external returns (bool success) {
+    function poke(uint8 action, uint256 ethPrice, uint256 daiPrice) external returns (bool success) {
+        lastStablePurchasePrice = daiPrice;
+        lastCryptoPurchasePrice = ethPrice;
         if (action == 0) {
             return tradeToStable();
         } else {
@@ -48,6 +56,7 @@ contract CryptoSave is Ownable {
         );
         cryptoAmount = 0;
         emit Transfer("WETH", "DAI", holdAmount);
+        totalGasUsed += tx.gasprice;
         return (stableAmount != 0);
     }
 
@@ -65,6 +74,7 @@ contract CryptoSave is Ownable {
         );
         stableAmount = 0;
         emit Transfer("DAI", "WETH", holdAmount);
+        totalGasUsed += tx.gasprice;
         return (cryptoAmount != 0);
     }
 
@@ -79,11 +89,14 @@ contract CryptoSave is Ownable {
      * @dev add to the contract's ether amount
      */
     receive() external payable {
-        cryptoAmount += address(this).balance;
-        convertToWeth();
+        // address payable _address = address(owner());
+        // owner().send(msg.value);
     }
 
-    function fundContract() external payable {
+    // Fallback function is called when msg.data is not empty
+    fallback() external payable {}
+
+    function fundContract() public payable {
         cryptoAmount += address(this).balance;
         convertToWeth();
     }
@@ -103,10 +116,11 @@ contract CryptoSave is Ownable {
      * to address of the owner
      */
     function cashOut() external onlyOwner {
-        /// transfer stable coin to the owner (TODO: add dai address)
-        withdrawToken(address(0), stableAmount);
-        /// transfer crypto to the owner (TODO: add eth address)
-        withdrawToken(address(0), cryptoAmount);
+        /// transfer stable coin to the owner
+        withdrawToken(DAI, stableAmount);
+        /// transfer crypto to the owner 
+        withdrawToken(WETH, cryptoAmount);
+        //weth.withdraw(cryptoAmount);
     }
 
     /**
