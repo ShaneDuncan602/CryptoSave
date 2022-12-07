@@ -11,30 +11,31 @@ Don't go broke in the Bear market.
 
 ```Dynamic Performance NFT```
 
-[Michelle Shelby](Ivoryspren)
+[Michelle Shelby](https://github.com/Ivoryspren)
 
 
 ```Dynamic Performance NFT```
 
-[Daniel Iniguez](danieliniguezv)
+[Daniel Iniguez](https://github.com/danieliniguezv)
 
 
 ```CryptoSave contract```
 
-[Shane Duncan](ShaneDuncan602)
+[Shane Duncan](https://github.com/ShaneDuncan602)
 
 
 ```Graphics```
 ```CryptoSave contract```
 
 
-[Robert W](gnimmel)
+[Robert W](https://github.com/gnimmel)
 
 
 
 
 ```Scheduled Poker```
 
-[Oscar](Struka9)
+[Oscar](https://github.com/Struka9)
+
 
 
