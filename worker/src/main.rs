@@ -8,15 +8,54 @@ use web3::{
 
 use reqwest::{Client, Url};
 
+static MAX_HISTORIC_ENTRIES: usize = 100;
+
 #[tokio::main]
 async fn main() {
-    let mut interval_timer = tokio::time::interval(chrono::Duration::minutes(15).to_std().unwrap());
+    let mut interval_timer = tokio::time::interval(chrono::Duration::minutes(1).to_std().unwrap());
+    let mut historic_prices: Vec<f64> = vec![];
+    let mut last_ema = 0f64;
+    
     loop {
         interval_timer.tick().await;
-        tokio::spawn(async {
-            poke().await;
-        });
+        let spot_price_response = get_spot_eth_price().await;
+        if let Ok(value) = spot_price_response {
+            println!("got price {}", &value.ethereum.usd);
+            historic_prices.push(value.ethereum.usd);
+        }
+
+        // Let's just keep the last MAX_HISTORIC_ENTRIES
+        if historic_prices.len() > MAX_HISTORIC_ENTRIES {
+            historic_prices.remove(0);
+        }
+
+        println!("Got {} prices already", historic_prices.len());
+        if historic_prices.len() > 2 {
+            last_ema = ema(&historic_prices, last_ema);
+            historic_prices = historic_prices;
+        }
+
+        println!("last EMA: {}", &last_ema);
+
+        poke().await;
     }
+}
+
+fn ema(prices: &Vec<f64>, last_ema: f64) -> f64 {
+    let most_recent_price = prices.last().unwrap();
+    let smoothing_result = 2f64 / (prices.len() + 1) as f64;
+
+    return (most_recent_price * smoothing_result) + (last_ema * (1f64 - smoothing_result));
+}
+
+fn sma(prices: &Vec<f64>) -> f64 {
+    let mut sma = 0f64;
+    let size = prices.len() as f64;
+    for price in prices {
+        sma += price;
+    }
+
+    sma / size
 }
 
 async fn get_spot_eth_price() -> Result<SpotPriceResponse, Error> {
