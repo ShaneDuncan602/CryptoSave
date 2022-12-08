@@ -17,36 +17,36 @@ contract CryptoSaveTest is Test {
 
     function testPokeStable() public {
         vm.deal(address(this), 10 ether);
-        cryptoSave.fundContract{value: 10 ether}();
+        cryptoSave.fundContract{value: 10 ether}(1000);
 
         cryptoSave.poke(0, 100, 100);
         console.log("<><><><><><>STABLE:");
         console.logUint(cryptoSave.getStableAmount());
-        assertGe(cryptoSave.getStableAmount(),12596504387286394754700);
+        assertGe(cryptoSave.getStableAmount(),12200000000000000000000);
     }
 
     function testPokeCrypto() public {
         vm.deal(address(this), 10 ether);
-        cryptoSave.fundContract{value: 10 ether}();
+        cryptoSave.fundContract{value: 10 ether}(1000);
 
         cryptoSave.poke(0, 100, 100);
         console.log("<><><><><><>STABLE:");
         console.logUint(cryptoSave.getStableAmount());
-        assertGe(cryptoSave.getStableAmount(),12596504387286394754700);
+        assertGe(cryptoSave.getStableAmount(),10000000000000000000000);
         cryptoSave.poke(1, 100, 100);
         console.log("<><><><><><>CRYPTO:");
         console.logUint(cryptoSave.getCryptoAmount());
-        assertGe(cryptoSave.getCryptoAmount(),9940095876057083000);
+        assertGe(cryptoSave.getCryptoAmount(),9940000000000000000);
     }
 
     function testFund() public {
         vm.deal(address(this), 10 ether);
-        cryptoSave.fundContract{value: 10 ether}();
+        cryptoSave.fundContract{value: 10000000 gwei}(1000);
     }
 
     function testCashOutWhenWeth() public {
         vm.deal(address(this), 10 ether);
-        cryptoSave.fundContract{value: 10 ether}();
+        cryptoSave.fundContract{value: 10 ether}(1000);
         cryptoSave.cashOut();        
         console.log("<><><><><><>WETH:");
         console.logUint(weth.balanceOf(address(this)));
@@ -55,12 +55,39 @@ contract CryptoSaveTest is Test {
 
     function testCashOutWhenDAI() public {
         vm.deal(address(this), 10 ether);
-        cryptoSave.fundContract{value: 10 ether}();
+        cryptoSave.fundContract{value: 10 ether}(1000);
         cryptoSave.poke(0, 100, 100);
         cryptoSave.cashOut();
         console.log("<><><><><><>DAI:");
         console.logUint(dai.balanceOf(address(this)));
-        assertGt(dai.balanceOf(address(this)),9999999999999999990);
-        
+        assertGt(dai.balanceOf(address(this)),9999999999999999990);        
+    }
+
+    function testIsInMoney() public {
+        vm.deal(address(this), 10 ether);
+        console.log("<><><><><><>FUND CONTRACT WITH 10 ETH - (spot price = $1500)");
+        cryptoSave.fundContract{value: 10 ether}(1500);
+        console.log("<><><><><><>ORIGINAL POSITION VALUE:");
+        console.logUint(cryptoSave.getOriginalPositionValue());
+        console.log("<><><><><><>INITIATE TRANSFER - (spot price = $1200)");     
+        cryptoSave.poke(0, 1200, 1);             
+        assertGe(cryptoSave.getStableAmount(),10000000000000000000000);
+        console.log("<><><><><><>CURRENT POSITION VALUE:");
+        console.logUint(cryptoSave.getCurrentPositionValue());
+        assertEq(cryptoSave.getIsInMoney(),false);        
+    }
+
+    function testLifetimePercentage() public {
+        vm.deal(address(this), 10 ether);
+        console.log("<><><><><><>FUND CONTRACT WITH 10 ETH - (spot price = $1500)");
+        cryptoSave.fundContract{value: 10 ether}(1500);
+        console.log("<><><><><><>ORIGINAL POSITION VALUE:");
+        console.logUint(cryptoSave.getOriginalPositionValue());
+        console.log("<><><><><><>INITIATE TRANSFER - (spot price = $1200)");     
+        cryptoSave.poke(0, 1200, 1);   
+         console.log("<><><><><><>CURRENT POSITION VALUE:");
+        console.logUint(cryptoSave.getCurrentPositionValue());
+        console.log("<><><><><><>LIFETIME RETURN PERCENTAGE");     
+        console.log(cryptoSave.getStrLifeTimePercentage());
     }
 }
