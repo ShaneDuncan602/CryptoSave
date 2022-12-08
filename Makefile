@@ -24,7 +24,19 @@ update:; forge update
 # Builds
 build  :; forge clean && forge build --optimize
 
-# Deploy contracts
+# Deploy contracts to anvil
 deployAll:; 	forge script script/DeployAll.s.sol --ffi --fork-url http://localhost:8545  --broadcast --verify -vvvv --private-key ${PRIVATE_KEY}
+# Deploy contracts to goerli 
+deployAllG:; 	forge script script/DeployAll.s.sol --ffi --rpc-url https://eth-goerli.g.alchemy.com/v2/RJNCmZZmdeEeZaSTdxlcXfWhapJ1zG7n  --broadcast --verify -vvvv --private-key ${ADDRESS}
 
+deployCtoG:; forge create CryptoSave --rpc-url https://eth-goerli.g.alchemy.com/v2/RJNCmZZmdeEeZaSTdxlcXfWhapJ1zG7n  --private-key ${PRIVATE_KEY}
+
+# Run all tests
 testAll:; forge test --fork-url https://eth-mainnet.g.alchemy.com/v2/613t3mfjTevdrCwDl28CVvuk6wSIxRPi -vv
+
+# Interact with locally deployed contract
+testFund:; cast send ${CRYPTO_SAVE_ADDR} "fundContract()" --value 1ether --private-key ${PRIVATE_KEY} --rpc-url ${RPC_URL}
+testPoke0:; cast send ${CRYPTO_SAVE_ADDR} "poke(uint8,uint256,uint256)" 0 100 100 --from ${ADDRESS} --rpc-url ${RPC_URL}
+testPoke1:; cast send ${CRYPTO_SAVE_ADDR} "poke(uint8,uint256,uint256)" 1 100 100 --from ${ADDRESS} --rpc-url ${RPC_URL}
+getCrypto:; cast call ${CRYPTO_SAVE_ADDR} "getCryptoAmount()(uint256)" --from ${ADDRESS} --rpc-url ${RPC_URL}
+getStable:; cast call ${CRYPTO_SAVE_ADDR} "getStableAmount()(uint256)" --from ${ADDRESS} --rpc-url ${RPC_URL}
