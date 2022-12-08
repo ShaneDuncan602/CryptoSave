@@ -195,7 +195,8 @@ contract CryptoSave is Ownable {
         } else {
             difference = currentPositionValue - originalPositionValue;
         }
-        strLifetimePercent = Strings.toString(100 * difference / originalPositionValue);        
+        strLifetimePercent = Strings.toString(100 * difference / originalPositionValue);
+        
         strLifetimePercent = string.concat(neg,strLifetimePercent);
     }
    

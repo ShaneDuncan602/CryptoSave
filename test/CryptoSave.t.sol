@@ -90,4 +90,22 @@ contract CryptoSaveTest is Test {
         console.log("<><><><><><>LIFETIME RETURN PERCENTAGE");     
         console.log(cryptoSave.getStrLifeTimePercentage());
     }
+
+    function testDemo() public {
+        vm.deal(address(this), 10 ether);
+        console.log("<><><><><><>FUND CONTRACT WITH 10 ETH - (spot price = $1500)");
+        cryptoSave.fundContract{value: 10 ether}(1500);
+        console.log("<><><><><><>ORIGINAL POSITION VALUE:");
+        console.logUint(cryptoSave.getOriginalPositionValue());
+        console.log("<><><><><><>INITIATE TRANSFER TO STABLE- (current spot price = $1250?)");     
+        cryptoSave.poke(0, 1250, 1);                     
+        console.log("<><><><><><>CURRENT POSITION VALUE:");
+        console.logUint(cryptoSave.getCurrentPositionValue());
+        console.log("<><><><><><>INITIATE TRANSFER TO ETHER- (current spot price = $1250?)");     
+        cryptoSave.poke(1, 1250, 1);                     
+        console.log("<><><><><><>CURRENT POSITION VALUE:");
+        console.logUint(cryptoSave.getCurrentPositionValue());
+        console.log("<><><><><><>HAVE WE MADE MONEY?");
+        console.logBool(cryptoSave.getIsInMoney());        
+    }
 }
