@@ -21,3 +21,4 @@ worker/target/
 cache/
 out/
 broadcast/
+**/.env
