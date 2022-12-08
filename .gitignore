@@ -1,3 +1,5 @@
+worker/target/
+
 # Binaries for programs and plugins
 *.exe
 *.exe~
